@@ -23,17 +23,17 @@ class SharedStore {
     if (MMKVIds.isEmpty) {
       return false;
     }
-    await invoke("addMMKVId", {"MMKVIds": MMKVIds});
+    await invoke("addMMKV", {"MMKVIds": MMKVIds});
     return true;
   }
 
   static void storeValue(String key, String value, valueType type, String MMKVId) async {
-    await invoke("set_value", {"key": key, "value": value, "value_type": type, "MMKV_id": MMKVId});
+    await invoke("store_value", {"key": key, "value": value, "type": type.toString(), "MMKVId": MMKVId});
   }
 
   static String? readValue(String key, String MMKVId) {
     String? result;
-    invoke("get_value", {"MMKVId": MMKVId}).then((value) {
+    invoke("read_value", {"MMKVId": MMKVId}).then((value) {
       result = value;
     });
     return result;

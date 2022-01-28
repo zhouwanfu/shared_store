@@ -1,0 +1,33 @@
+PODS:
+  - Flutter (1.0.0)
+  - MMKV (1.2.11):
+    - MMKVCore (~> 1.2.11)
+  - MMKVCore (1.2.11)
+  - shared_store (0.0.1):
+    - Flutter
+    - MMKV
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - shared_store (from `.symlinks/plugins/shared_store/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MMKV
+    - MMKVCore
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  shared_store:
+    :path: ".symlinks/plugins/shared_store/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  MMKV: 217b643c181c3d2f71983206ca1972d0a6e99881
+  MMKVCore: f9e4f56742fdebbd042f7a273e278927f182cee7
+  shared_store: 5a40cb7e2fcd88d0298cb07759428729f35a1b61
+
+PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+
+COCOAPODS: 1.10.2
