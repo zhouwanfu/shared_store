@@ -51,7 +51,7 @@
   return self;
 }
 
-- (id)createDefaultMMKV{
+- (id)createDefaultMMKV {
   MMKV *defaultMMKV = [MMKV mmkvWithID:kDefaultMMKVId];
   [_MMKVPool setValue:defaultMMKV forKey:kDefaultMMKVId];
   return @"true";
@@ -60,7 +60,7 @@
 - (id)addMMKV:(FlutterMethodCall *)call {
   NSString *result = @"true";
   NSString *mmkvId = call.arguments[kMMKVId];
-  if (mmkvId == NULL) {
+  if (mmkvId == NULL || _MMKVPool == nil) {
     result = @"false";
   }else {
     MMKV *customMMKV = [MMKV mmkvWithID:mmkvId];
