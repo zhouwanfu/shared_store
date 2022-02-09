@@ -36,6 +36,9 @@
   else if([@"read_value" isEqualToString:call.method]) {
     result([self readValue:call]);
   }
+  else if([@"remove_value" isEqualToString:call.method]) {
+    result([self removeValue:call]);
+  }
   
 }
 
@@ -124,4 +127,17 @@
   return result;
 }
 
+- (void)removeValueWithKey:(NSString *)key MMKVId:(NSString *)MMKVId {
+  MMKV *mmkv = _MMKVPool[MMKVId];
+  [mmkv removeValueForKey:key];
+}
+
+- (id)removeValue:(FlutterMethodCall *)call {
+  BOOL result = false;
+  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"MMKVId"]) {
+    [self removeValueWithKey:call.arguments[@"key"] MMKVId:call.arguments[@"MMKVId"]];
+    result = true;
+  }
+  return result == true ? @"true" : @"false";
+}
 @end

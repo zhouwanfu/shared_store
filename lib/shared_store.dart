@@ -31,11 +31,15 @@ class SharedStore {
     await invoke("store_value", {"key": key, "value": value, "type": type.toString(), "MMKVId": MMKVId});
   }
 
-  static String? readValue(String key, String MMKVId) {
+  static String? readValue(String key, valueType type, String MMKVId) {
     String? result;
-    invoke("read_value", {"MMKVId": MMKVId}).then((value) {
+    invoke("read_value", {"MMKVId": MMKVId, "key": key, "type": type.toString()}).then((value) {
       result = value;
     });
     return result;
+  }
+
+  static void removeValue(String key, String MMKVId) {
+    invoke("remove_value", {"key": key, "MMKVId": MMKVId});
   }
 }
