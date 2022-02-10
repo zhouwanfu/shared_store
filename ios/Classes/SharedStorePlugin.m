@@ -74,7 +74,6 @@
 - (id)storeValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key value:(NSString *)value type:(NSString *)type {
   NSString *result = @"true";
   MMKV *mmkv = _MMKVPool[mmkvId];
-  //bool int double string
   switch (type.integerValue) {
     case 0:
       [mmkv setBool:[value isEqualToString:@"true"] forKey:key];
@@ -90,6 +89,7 @@
       break;
     default:
       NSAssert(1, @"Invalid type");
+      result = @"false";
       break;
   }
   return result;

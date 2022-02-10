@@ -24,39 +24,24 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "shared_store");
     channel.setMethodCallHandler(this);
+    this._MMKVPool = new HashMap<>();
   }
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("initMMKV")) {
-      createDefaultMMKV();
-      result.success("true");
+      result.success(createDefaultMMKV());
     }
     else if (call.method.equals("addMMKV")) {
-      boolean success = addMMKV(call);
-      if (success) {
-        result.success("true");
-      } else {
-        result.success("false");
-      }
+      result.success(addMMKV(call));
     }else if (call.method.equals("store_value")) {
-      boolean success = storeVale(call);
-      if (success) {
-        result.success("true");
-      } else {
-        result.success("false");
-      }
-
+      result.success(storeVale(call));
     }else if (call.method.equals("read_value")) {
       result.success(readValue(call));
     }else if (call.method.equals("remove_value")) {
-      boolean success = removeValue(call);
-      if (success) {
-        result.success("true");
-      } else {
-        result.success("false");
-      }
+      result.success(removeValue(call));
     }else {
+      assert false : "notImplemented";
       result.notImplemented();
     }
   }
@@ -66,25 +51,30 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(null);
   }
 
-  private void createDefaultMMKV() {
-    this._MMKVPool = new HashMap<>();
+  private String createDefaultMMKV() {
+    if (this._MMKVPool.get("default") != null) {
+      assert false : "Repeat initialization";
+      return "false";
+    }
     MMKV defaultMMKV = MMKV.mmkvWithID("defaultMMKV");
     this._MMKVPool.put("defaultMMKV", defaultMMKV);
+    return "true";
   }
 
-  private boolean addMMKV(MethodCall call) {
-    boolean result = false;
+  private String addMMKV(MethodCall call) {
     String MMKVId = call.argument("MMKVId");
-    if (this._MMKVPool != null && MMKVId != null) {
+    if (this._MMKVPool.get(MMKVId) == null && MMKVId != null) {
       MMKV customMMKV = MMKV.mmkvWithID(MMKVId);
       this._MMKVPool.put(MMKVId, customMMKV);
-      result = true;
+      return "true";
+    } else {
+      assert false : "Invalid MMKVId";
+      return "false";
     }
-    return result;
   }
 
-  private boolean storeVale(MethodCall call) {
-    boolean result = false;
+  private String storeVale(MethodCall call) {
+    String result = "false";
     String MMKVId = call.argument("MMKVId");
     int type = Integer.parseInt(call.argument("type"));
     String key = call.argument("key");
@@ -104,7 +94,7 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
         case 3:
           mmkv.putString(key, value);
       }
-      result = true;
+      result = "true";
     }
     return result;
   }
@@ -133,14 +123,14 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
     return result;
   }
 
-  private boolean removeValue(MethodCall call) {
-    boolean result = false;
+  private String removeValue(MethodCall call) {
+    String result = "false";
     String MMKVId = call.argument("MMKVId");
     String key = call.argument("key");
     MMKV mmkv = this._MMKVPool.get(MMKVId);
     if (key != null && mmkv != null) {
       mmkv.removeValueForKey(key);
-      result = true;
+      result = "true";
     }
     return result;
   }
