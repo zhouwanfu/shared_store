@@ -1,8 +1,8 @@
 import 'package:shared_store/shared_store.dart';
 
 class SharedStorePlugin {
-  static void initMMKV({List<String> MMKVIds = const ["default"]}) {
-    SharedStore.initMMKV(MMKVIds);
+  static void initMMKV() {
+    SharedStore.initMMKV();
   }
 
   static void addMMKV(List<String> MMKVIds) {
@@ -13,9 +13,9 @@ class SharedStorePlugin {
     SharedStore.storeValue(key, value.toString(), valueType.intType, MMKVId);
   }
 
-  static int? readInt(String key, {String MMKVId = "default"}) {
+  static Future<int?> readInt(String key, {String MMKVId = "default"}) async {
     int? intResult;
-    String? intString = SharedStore.readValue(key, MMKVId);
+    String? intString = await SharedStore.readValue(key, valueType.intType, MMKVId);
     if (intString != null) {
       intResult = int.parse(intString);
     }
@@ -26,8 +26,8 @@ class SharedStorePlugin {
     SharedStore.storeValue(key, value, valueType.stringType, MMKVId);
   }
 
-  static String? readString(String key, {String MMKVId = "default"}) {
-    String? stringResult = SharedStore.readValue(key, MMKVId);
+  static Future<String?> readString(String key, {String MMKVId = "default"}) async {
+    String? stringResult = await SharedStore.readValue(key, valueType.stringType, MMKVId);
     return stringResult;
   }
 
@@ -35,9 +35,9 @@ class SharedStorePlugin {
     SharedStore.storeValue(key, value.toString(), valueType.doubleType, MMKVId);
   }
 
-  static double? readDouble(String key, {String MMKVId = "default"}) {
+  static Future<double?> readDouble(String key, {String MMKVId = "default"}) async {
     double? doubleResult;
-    String? doubleString = SharedStore.readValue(key, MMKVId);
+    String? doubleString = await SharedStore.readValue(key, valueType.doubleType, MMKVId);
     if (doubleString != null) {
       doubleResult = double.parse(doubleString);
     }
@@ -48,12 +48,16 @@ class SharedStorePlugin {
     SharedStore.storeValue(key, value.toString(), valueType.boolType, MMKVId);
   }
 
-  static bool? readBool(String key, {String MMKVId = "default"}) {
+  static Future<bool?> readBool(String key, {String MMKVId = "default"}) async {
     bool? boolResult;
-    String? boolString = SharedStore.readValue(key, MMKVId);
+    String? boolString = await SharedStore.readValue(key, valueType.boolType, MMKVId);
     if (boolString != null) {
       boolResult = boolString == "true" ? true : false;
     }
     return boolResult;
+  }
+
+  static void removeValue(String key, {String MMKVId = "default"}) {
+    SharedStore.removeValue(key, MMKVId);
   }
 }

@@ -11,11 +11,8 @@ class SharedStore {
     return result;
   }
 
-  static Future<bool> initMMKV(List<String> MMKVIds) async {
-    if (MMKVIds.isEmpty) {
-      return false;
-    }
-    await invoke("initMMKV", {"MMKVIds": MMKVIds});
+  static Future<bool> initMMKV() async {
+    await invoke("initMMKV", {});
     return true;
   }
 
@@ -28,14 +25,11 @@ class SharedStore {
   }
 
   static void storeValue(String key, String value, valueType type, String MMKVId) async {
-    await invoke("store_value", {"key": key, "value": value, "type": type.toString(), "MMKVId": MMKVId});
+    await invoke("store_value", {"key": key, "value": value, "type": type.index.toString(), "MMKVId": MMKVId});
   }
 
-  static String? readValue(String key, valueType type, String MMKVId) {
-    String? result;
-    invoke("read_value", {"MMKVId": MMKVId, "key": key, "type": type.toString()}).then((value) {
-      result = value;
-    });
+  static Future<String?> readValue(String key, valueType type, String MMKVId) async {
+    String? result = await invoke("read_value", {"MMKVId": MMKVId, "key": key, "type": type.index.toString()});
     return result;
   }
 

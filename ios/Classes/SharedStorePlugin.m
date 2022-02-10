@@ -1,11 +1,11 @@
 #import "SharedStorePlugin.h"
 #import  "MMKV.h"
 
-#define kMMKVId @"mmkvId"
+#define kMMKVId @"MMKVId"
 #define kDefaultMMKVId @"default"
 
 @interface SharedStorePlugin()
-@property(nonatomic, strong)NSDictionary *MMKVPool;
+@property(nonatomic, strong)NSMutableDictionary *MMKVPool;
 @end
 
 @implementation SharedStorePlugin
@@ -18,12 +18,10 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
-  
+//  if ([@"getPlatformVersion" isEqualToString:call.method]) {
+//    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+//  }
+
   if ([@"initMMKV" isEqualToString:call.method]) {
     result([self createDefaultMMKV]);
   }
@@ -38,6 +36,8 @@
   }
   else if([@"remove_value" isEqualToString:call.method]) {
     result([self removeValue:call]);
+  }else {
+    result(FlutterMethodNotImplemented);
   }
   
 }
@@ -46,7 +46,7 @@
 {
   self = [super init];
   if (self) {
-    self.MMKVPool = [NSDictionary dictionary];
+    self.MMKVPool = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -71,7 +71,7 @@
 
 - (id)storeValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key value:(NSString *)value type:(NSString *)type {
   NSString *result = @"true";
-  MMKV *mmkv = _MMKVPool[kMMKVId];
+  MMKV *mmkv = _MMKVPool[mmkvId];
   //bool int double string
   switch (type.integerValue) {
     case 0:
@@ -79,10 +79,13 @@
       break;
     case 1:
       [mmkv setInt64:value.intValue forKey:key];
+      break;
     case 2:
-      [mmkv setFloat:value.floatValue forKey:key];
+      [mmkv setDouble:value.doubleValue forKey:key];
+      break;
     case 3:
-      [mmkv setValue:value forKey:key];
+      [mmkv setString:value forKey:key];
+      break;
     default:
       break;
   }
@@ -101,7 +104,7 @@
 
 - (NSString *)readValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key type:(NSString *)type {
   NSString *result = @"";
-  MMKV *mmkv = _MMKVPool[kMMKVId];
+  MMKV *mmkv = _MMKVPool[mmkvId];
   switch (type.integerValue) {
     case 0:
       result = [mmkv getBoolForKey:key] ? @"true" : @"false";
@@ -110,7 +113,7 @@
       result = [NSString stringWithFormat:@"%lld",[mmkv getInt64ForKey:key]];
       break;;
     case 2:
-      result = [NSString stringWithFormat:@"%f",[mmkv getFloatForKey:key]];
+      result = [NSString stringWithFormat:@"%@",@([mmkv getDoubleForKey:key])];
       break;
     case 3:
       result = [mmkv getStringForKey:key];
@@ -121,7 +124,7 @@
 }
 - (id)readValue:(FlutterMethodCall *)call {
   NSString *result = @"";
-  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"value"] && call.arguments[@"type"]) {
+  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"type"]) {
     result = [self readValueWithMMKVId:call.arguments[kMMKVId] key:call.arguments[@"key"] type:call.arguments[@"type"]];
   }
   return result;
