@@ -17,7 +17,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // result = 'please init MMKV';
   }
 
   void initMMKV() {
