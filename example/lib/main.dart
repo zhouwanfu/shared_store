@@ -28,24 +28,28 @@ class _MyAppState extends State<MyApp> {
 
   void addMMKV() {
     String customMMKVId = "testPlugin";
-    SharedStorePlugin.addMMKV([customMMKVId]);
+    SharedStorePlugin.addMMKV(customMMKVId);
     setState(() {
       result = "MMKV $customMMKVId add success";
     });
   }
 
-  void storeTestData() {
+  void storeTestData() async {
     const bool testBool = true;
     const int testInt = 123456;
     const double testDouble = 3.1415926;
     const String testString = 'testStringValue';
-    SharedStorePlugin.storeBool('testBool', testBool);
-    SharedStorePlugin.storeDouble('testDouble', testDouble);
-    SharedStorePlugin.storeInt('testInt', testInt);
-    SharedStorePlugin.storeString('testString', testString);
+    String? boolResult = await SharedStorePlugin.storeBool('testBool', testBool);
+    String? doubleResult = await SharedStorePlugin.storeDouble('testDouble', testDouble);
+    String? intResult = await SharedStorePlugin.storeInt('testInt', testInt);
+    String? stringResult = await SharedStorePlugin.storeString('testString', testString);
     setState(() {
-      result =
-          'store value : \n boolValue: $testBool \n intValue: $testInt \n doubleValue: $testDouble \n stringValue: $testString \n store value success';
+      if (boolResult == 'true' && doubleResult == 'true' && intResult == 'true' && stringResult == 'true') {
+        result =
+            'store value : \n boolValue: $testBool \n intValue: $testInt \n doubleValue: $testDouble \n stringValue: $testString \n store value success';
+      } else {
+        result = 'store value failed';
+      }
     });
   }
 
@@ -81,7 +85,11 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     child: Container(),
                   ),
-                  CustomButton(title: '2,addMMKV', onTap: () => addMMKV())
+                  CustomButton(
+                      title: '2,addMMKV',
+                      onTap: () {
+                        addMMKV();
+                      })
                 ],
               ),
               const Divider(
@@ -90,9 +98,17 @@ class _MyAppState extends State<MyApp> {
               ),
               Row(
                 children: [
-                  CustomButton(title: '3,setData', onTap: () => storeTestData()),
+                  CustomButton(
+                      title: '3,setData',
+                      onTap: () {
+                        storeTestData();
+                      }),
                   Expanded(child: Container()),
-                  CustomButton(title: '4,getData', onTap: () => readTestData())
+                  CustomButton(
+                      title: '4,getData',
+                      onTap: () {
+                        readTestData();
+                      })
                 ],
               ),
               const Divider(

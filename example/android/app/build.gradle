@@ -54,3 +54,7 @@ android {
 flutter {
     source '../..'
 }
+
+dependencies {
+    implementation 'com.tencent:mmkv:1.2.12'
+}

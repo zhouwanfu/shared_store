@@ -5,12 +5,12 @@ class SharedStorePlugin {
     SharedStore.initMMKV();
   }
 
-  static void addMMKV(List<String> MMKVIds) {
-    SharedStore.addMMKVId(MMKVIds);
+  static void addMMKV(String MMKVId) {
+    SharedStore.addMMKVId(MMKVId);
   }
 
-  static void storeInt(String key, int value, {String MMKVId = "default"}) {
-    SharedStore.storeValue(key, value.toString(), valueType.intType, MMKVId);
+  static Future<String?> storeInt(String key, int value, {String MMKVId = "default"}) {
+    return SharedStore.storeValue(key, value.toString(), valueType.intType, MMKVId);
   }
 
   static Future<int?> readInt(String key, {String MMKVId = "default"}) async {
@@ -22,8 +22,8 @@ class SharedStorePlugin {
     return intResult;
   }
 
-  static void storeString(String key, String value, {String MMKVId = "default"}) {
-    SharedStore.storeValue(key, value, valueType.stringType, MMKVId);
+  static Future<String?> storeString(String key, String value, {String MMKVId = "default"}) {
+    return SharedStore.storeValue(key, value, valueType.stringType, MMKVId);
   }
 
   static Future<String?> readString(String key, {String MMKVId = "default"}) async {
@@ -31,8 +31,8 @@ class SharedStorePlugin {
     return stringResult;
   }
 
-  static void storeDouble(String key, double value, {String MMKVId = "default"}) {
-    SharedStore.storeValue(key, value.toString(), valueType.doubleType, MMKVId);
+  static Future<String?> storeDouble(String key, double value, {String MMKVId = "default"}) {
+    return SharedStore.storeValue(key, value.toString(), valueType.doubleType, MMKVId);
   }
 
   static Future<double?> readDouble(String key, {String MMKVId = "default"}) async {
@@ -44,8 +44,8 @@ class SharedStorePlugin {
     return doubleResult;
   }
 
-  static void storeBool(String key, bool value, {String MMKVId = "default"}) {
-    SharedStore.storeValue(key, value.toString(), valueType.boolType, MMKVId);
+  static Future<String?> storeBool(String key, bool value, {String MMKVId = "default"}) {
+    return SharedStore.storeValue(key, value.toString(), valueType.boolType, MMKVId);
   }
 
   static Future<bool?> readBool(String key, {String MMKVId = "default"}) async {

@@ -2,8 +2,9 @@
     package="com.sailor.shared_store_example">
    <application
         android:label="shared_store_example"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:name=".MainApplication"
+        android:icon="@mipmap/ic_launcher"
+       >
         <activity
             android:name=".MainActivity"
             android:exported="true"
