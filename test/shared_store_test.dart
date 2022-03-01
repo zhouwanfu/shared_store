@@ -20,27 +20,27 @@ void main() {
   test('int_test', () async {
     SharedStorePlugin.initMMKV();
     SharedStorePlugin.storeInt('test_int_key', 999);
-    int? intResult = SharedStorePlugin.readInt('test_int_key');
+    Future<int?> intResult = SharedStorePlugin.readInt('test_int_key');
     expect(intResult, 999);
   });
 
   test('double_test', () async {
     SharedStorePlugin.initMMKV();
     SharedStorePlugin.storeDouble('test_double_key', 3.1415926);
-    double? intResult = SharedStorePlugin.readDouble('test_double_key');
+    Future<double?> intResult = SharedStorePlugin.readDouble('test_double_key');
     expect(intResult, 3.1415926);
   });
 
   test('string_test', () async {
     SharedStorePlugin.initMMKV();
     SharedStorePlugin.storeString('test_string_key', "string_value");
-    String? intResult = SharedStorePlugin.readString('test_string_key');
+    Future<String?> intResult = SharedStorePlugin.readString('test_string_key');
     expect(intResult, 'string_value');
 
     test('bool_test', () async {
       SharedStorePlugin.initMMKV();
       SharedStorePlugin.storeBool('test_bool_key', true);
-      bool? intResult = SharedStorePlugin.readBool('test_bool_key');
+      Future<bool?> intResult = SharedStorePlugin.readBool('test_bool_key');
       expect(intResult, true);
     });
   });

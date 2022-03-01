@@ -1,7 +1,7 @@
 name: shared_store
-description: A new flutter plugin project.
+description: Native storage solution based on MMKV.
 version: 0.0.1
-homepage:
+homepage: https://github.com/zhouwanfu/shared_store
 
 environment:
   sdk: ">=2.16.0-134.0.dev <3.0.0"

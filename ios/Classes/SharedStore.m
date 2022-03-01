@@ -31,12 +31,12 @@
 
 - (id)addMMKV:(NSString *)MMKVId {
   NSString *result = @"true";
-  if (MMKVId == nil || _MMKVPool[MMKVId]) {
+  if (MMKVId == nil || self.MMKVPool[MMKVId]) {
     result = @"false";
     NSAssert(1, @"Invalid MMKVId");
   }else {
     MMKV *customMMKV = [MMKV mmkvWithID:MMKVId];
-    [_MMKVPool setValue:customMMKV forKey:MMKVId];
+    [self.MMKVPool setValue:customMMKV forKey:MMKVId];
   }
   return result;
 }
@@ -67,7 +67,7 @@
 
 - (id)readValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key type:(valueType)type {
   NSString *result = @"";
-  MMKV *mmkv = _MMKVPool[mmkvId];
+  MMKV *mmkv = self.MMKVPool[mmkvId];
   switch (type) {
     case boolType:
       result = [mmkv getBoolForKey:key] ? @"true" : @"false";
@@ -88,18 +88,18 @@
 }
 
 - (id)removeMMKVWithKey:(NSString *)key MMKVId:(NSString *)MMKVId {
-  MMKV *mmkv = _MMKVPool[MMKVId];
+  MMKV *mmkv = self.MMKVPool[MMKVId];
   [mmkv removeValueForKey:key];
   return @"true";
 }
 
 - (MMKV *)getMMKVWithMMKVId:(NSString *)MMKVId {
-  if (_MMKVPool == nil) {
+  if (self.MMKVPool == nil) {
     return nil;
   }
   if (MMKVId == nil) {
     return nil;
   }
-  return _MMKVPool[MMKVId];
+  return self.MMKVPool[MMKVId];
 }
 @end
