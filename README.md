@@ -23,6 +23,7 @@ Native storage solution based on MMKV.
 
 
 ## Usage
+### 一,Flutter端
 1.添加依赖：
 
 ```dart
@@ -32,7 +33,39 @@ dependencies:
 
   shared_store: ^0.01
 ```
-2.在Flutter中，启用SharedStore前，导入`shared_store_plugin.dart`对其进行初始化：
+
+2.启用SharedStore前，导入`shared_store_plugin.dart`对其进行初始化：
+
+```dart
+import 'package:shared_store/shared_store_plugin.dart';
+```
+
 ```dart
 SharedStorePlugin.initMMKV();
+```
+
+3.根据是否需要添加除内置默认的`default`MMKV外的可选的MMKV实例：
+```dart
+    String customMMKVId = "testPlugin";
+    SharedStorePlugin.addMMKV(customMMKVId);
+```
+
+4.在需要存储数据时：
+```dart
+    const bool testBool = true;
+    const int testInt = 123456;
+    const double testDouble = 3.1415926;
+    const String testString = 'testStringValue';
+    String? boolResult = await SharedStorePlugin.storeBool('testBool', testBool);
+    String? doubleResult = await SharedStorePlugin.storeDouble('testDouble', testDouble);
+    String? intResult = await SharedStorePlugin.storeInt('testInt', testInt);
+    String? stringResult = await SharedStorePlugin.storeString('testString', testString);
+```
+
+5.在需要读取数据时：
+```dart
+    bool? readBool = await SharedStorePlugin.readBool('testBool');
+    int? readInt = await SharedStorePlugin.readInt('testInt');
+    double? readDouble = await SharedStorePlugin.readDouble('testDouble');
+    String? readString = await SharedStorePlugin.readString('testString');
 ```
