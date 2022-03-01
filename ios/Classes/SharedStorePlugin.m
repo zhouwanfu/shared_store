@@ -1,11 +1,11 @@
 #import "SharedStorePlugin.h"
-#import  "MMKV.h"
-
-#define kMMKVId @"MMKVId"
-#define kDefaultMMKVId @"default"
+#import "MMKV.h"
+#import "SharedStore.h"
 
 @interface SharedStorePlugin()
-@property(nonatomic, strong)NSMutableDictionary *MMKVPool;
+
+@property(nonatomic, strong)SharedStore *sharedStore;
+
 @end
 
 @implementation SharedStorePlugin
@@ -36,120 +36,42 @@
     NSAssert(1, @"FlutterMethodNotImplemented");
     result(FlutterMethodNotImplemented);
   }
-  
 }
 
-- (instancetype)init
-{
-  self = [super init];
-  if (self) {
-    self.MMKVPool = [NSMutableDictionary dictionary];
+- (SharedStore *)sharedStore {
+  if (_sharedStore == nil) {
+    _sharedStore = [[SharedStore alloc]init];
   }
-  return self;
+  return _sharedStore;
 }
 
 - (id)createDefaultMMKV {
-  if (_MMKVPool[kDefaultMMKVId]) {
-    NSAssert(1, @"Repeat initialization");
-    return @"false";
-  }
-  MMKV *defaultMMKV = [MMKV mmkvWithID:kDefaultMMKVId];
-  [_MMKVPool setValue:defaultMMKV forKey:kDefaultMMKVId];
-  return @"true";
+  return [self.sharedStore createDefaultMMKV];
 }
 
 - (id)addMMKV:(FlutterMethodCall *)call {
-  NSString *result = @"true";
-  NSString *mmkvId = call.arguments[kMMKVId];
-  if (mmkvId == nil || _MMKVPool[mmkvId]) {
-    result = @"false";
-    NSAssert(1, @"Invalid MMKVId");
-  }else {
-    MMKV *customMMKV = [MMKV mmkvWithID:mmkvId];
-    [_MMKVPool setValue:customMMKV forKey:mmkvId];
-  }
-  return result;
-}
-
-- (id)storeValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key value:(NSString *)value type:(NSString *)type {
-  NSString *result = @"true";
-  MMKV *mmkv = _MMKVPool[mmkvId];
-  switch (type.integerValue) {
-    case 0:
-      [mmkv setBool:[value isEqualToString:@"true"] forKey:key];
-      break;
-    case 1:
-      [mmkv setInt64:value.intValue forKey:key];
-      break;
-    case 2:
-      [mmkv setDouble:value.doubleValue forKey:key];
-      break;
-    case 3:
-      [mmkv setString:value forKey:key];
-      break;
-    default:
-      NSAssert(1, @"Invalid type");
-      result = @"false";
-      break;
-  }
-  return result;
+  NSString *MMKVId = call.arguments[kMMKVId];
+  return [self.sharedStore addMMKV:MMKVId];
 }
 
 - (id)storeValue:(FlutterMethodCall *)call {
-  NSString *result = @"true";
-  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"value"] && call.arguments[@"type"]) {
-    [self storeValueWithMMKVId:call.arguments[kMMKVId] key:call.arguments[@"key"] value:call.arguments[@"value"] type:call.arguments[@"type"]];
-  } else {
-    result = @"false";
-    NSAssert(1, @"Parameter is not complete");
-  }
-  return result;
+  NSString *MMKVId = call.arguments[kMMKVId];
+  NSString *key = call.arguments[@"key"];
+  NSString *value = call.arguments[@"value"];
+  valueType type = [call.arguments[@"type"] integerValue];
+  return [self.sharedStore storeValueWithMMKVId:MMKVId key:key value:value type:type];
 }
 
-- (NSString *)readValueWithMMKVId:(NSString *)mmkvId key:(NSString *)key type:(NSString *)type {
-  NSString *result = @"";
-  MMKV *mmkv = _MMKVPool[mmkvId];
-  switch (type.integerValue) {
-    case 0:
-      result = [mmkv getBoolForKey:key] ? @"true" : @"false";
-      break;
-    case 1:
-      result = [NSString stringWithFormat:@"%lld",[mmkv getInt64ForKey:key]];
-      break;;
-    case 2:
-      result = [NSString stringWithFormat:@"%@",@([mmkv getDoubleForKey:key])];
-      break;
-    case 3:
-      result = [mmkv getStringForKey:key];
-    default:
-      NSAssert(1, @"Invalid type");
-      break;
-  }
-  return result;
-}
 - (id)readValue:(FlutterMethodCall *)call {
-  NSString *result = @"";
-  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"type"]) {
-    result = [self readValueWithMMKVId:call.arguments[kMMKVId] key:call.arguments[@"key"] type:call.arguments[@"type"]];
-  } else {
-    NSAssert(1, @"Parameter is not complete");
-  }
-  return result;
-}
-
-- (void)removeValueWithKey:(NSString *)key MMKVId:(NSString *)MMKVId {
-  MMKV *mmkv = _MMKVPool[MMKVId];
-  [mmkv removeValueForKey:key];
+  NSString *MMKVId = call.arguments[kMMKVId];
+  NSString *key = call.arguments[@"key"];
+  valueType type = [call.arguments[@"type"] integerValue];
+  return [self.sharedStore readValueWithMMKVId:MMKVId key:key type:type];
 }
 
 - (id)removeValue:(FlutterMethodCall *)call {
-  BOOL result = false;
-  if (call.arguments[kMMKVId] && call.arguments[@"key"] && call.arguments[@"MMKVId"]) {
-    [self removeValueWithKey:call.arguments[@"key"] MMKVId:call.arguments[@"MMKVId"]];
-    result = true;
-  } else {
-    NSAssert(1, @"Parameter is not complete");
-  }
-  return result == true ? @"true" : @"false";
+  NSString *MMKVId = call.arguments[kMMKVId];
+  NSString *key = call.arguments[@"key"];
+ return [self.sharedStore removeMMKVWithKey:key MMKVId:MMKVId];
 }
 @end

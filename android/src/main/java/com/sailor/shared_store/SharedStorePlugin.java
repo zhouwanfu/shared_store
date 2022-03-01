@@ -59,7 +59,8 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
 
   private String storeVale(MethodCall call) {
     String MMKVId = call.argument("MMKVId");
-    int type = Integer.parseInt(call.argument("type"));
+    int typeIndex = Integer.parseInt(call.argument("type"));
+    valueType type = valueType.values()[typeIndex];
     String key = call.argument("key");
     String value = call.argument("value");
     return this.sharedStore.storeVale(MMKVId, type, key, value);
@@ -67,7 +68,8 @@ public class SharedStorePlugin implements FlutterPlugin, MethodCallHandler {
 
   private String readValue(MethodCall call) {
     String MMKVId = call.argument("MMKVId");
-    int type = Integer.parseInt(call.argument("type"));
+    int typeIndex = Integer.parseInt(call.argument("type"));
+    valueType type = valueType.values()[typeIndex];
     String key = call.argument("key");
     return this.sharedStore.readValue(MMKVId, type, key);
   }

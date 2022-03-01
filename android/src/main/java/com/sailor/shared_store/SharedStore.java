@@ -6,10 +6,9 @@ import com.tencent.mmkv.MMKV;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.flutter.plugin.common.MethodCall;
-
 public class SharedStore extends Application {
     private Map<String, MMKV> _MMKVPool;
+
     public SharedStore(){
         _MMKVPool = new HashMap<>();
     }
@@ -47,21 +46,21 @@ public class SharedStore extends Application {
         }
     }
 
-    public String storeVale(String MMKVId, int type, String key, String value) {
+    public String storeVale(String MMKVId, valueType type, String key, String value) {
         String result = "false";
         MMKV mmkv = this.getMMKKVWithId(MMKVId);
         if (mmkv != null && key != null && value != null) {
             switch (type) {
-                case 0 :
+                case  boolType:
                     mmkv.putBoolean(key, value.equals("true") ? true : false);
                     break;
-                case 1:
+                case intType:
                     mmkv.putInt(key, Integer.parseInt(value));
                     break;
-                case 2:
+                case doubleType:
                     mmkv.putFloat(key, Float.parseFloat(value));
                     break;
-                case 3:
+                case stringType:
                     mmkv.putString(key, value);
             }
             result = "true";
@@ -69,21 +68,21 @@ public class SharedStore extends Application {
         return result;
     }
 
-    public String readValue(String MMKVId, int type, String key) {
+    public String readValue(String MMKVId, valueType type, String key) {
         String result = null;
         MMKV mmkv = this.getMMKKVWithId(MMKVId);
         if (mmkv != null && key != null ) {
             switch (type) {
-                case 0:
+                case boolType:
                     result = mmkv.getBoolean(key, false) == true ? "true" : "false";
                     break;
-                case 1:
+                case intType:
                     result = Integer.toString(mmkv.getInt(key, Integer.MIN_VALUE));
                     break;
-                case 2:
+                case doubleType:
                     result = Float.toString(mmkv.getFloat(key, Float.MIN_VALUE));
                     break;
-                case 3:
+                case stringType:
                     result = mmkv.getString(key,null);
             }
         }
@@ -100,4 +99,5 @@ public class SharedStore extends Application {
         return result;
     }
 }
+
 
