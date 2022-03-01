@@ -69,3 +69,7 @@ SharedStorePlugin.initMMKV();
     double? readDouble = await SharedStorePlugin.readDouble('testDouble');
     String? readString = await SharedStorePlugin.readString('testString');
 ```
+6.在需要删除存储数据时：
+```dart
+SharedStorePlugin.removeValue('testBool');
+```
